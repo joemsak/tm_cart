@@ -1,0 +1,1 @@
+rule "bulk" unit price 4.55 if id is 'AP1' and quantity is at least 3
