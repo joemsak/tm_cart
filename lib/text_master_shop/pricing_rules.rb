@@ -1,6 +1,5 @@
 module TextMasterShop
   class PricingRules
-    private
     PATTERNS = {
       rule_name: /"(\w+)"/,
       rule_def: /"\w+"\s(.+)/,
@@ -9,31 +8,32 @@ module TextMasterShop
       conditions: /if\s(.+)/,
     }
 
+    private
     attr_reader :file
 
     public
-    attr_reader :rules
+    attr_reader :parsed
 
     def initialize(rules_file)
       @file = rules_file
-      @rules = {}
-      read_rules
+      @parsed = {}
+      parse_rules
     end
 
     def [](key)
-      rules[key]
+      parsed[key]
     end
 
     private
-    def read_rules
+    def parse_rules
       file.readlines.each do |line|
         rule_name = match_line(line, :rule_name)
         rule_def = match_line(line, :rule_def)
 
-        rules[rule_name] = {}
-        rules[rule_name]['unit_price'] = unit_price(rule_def)
-        rules[rule_name]['every'] = every(rule_def)
-        rules[rule_name]['conditions'] = conditions(rule_def)
+        parsed[rule_name] = {}
+        parsed[rule_name]['unit_price'] = unit_price(rule_def)
+        parsed[rule_name]['every'] = every(rule_def)
+        parsed[rule_name]['conditions'] = conditions(rule_def)
       end
     end
 
@@ -52,10 +52,29 @@ module TextMasterShop
     end
 
     def conditions(line)
-      conds = match_line(line, :conditions)
-      conds.gsub!(/\sis at least\s/, ' >= ')
-      conds.gsub!(/\sis\s/, ' == ')
-      conds.gsub!(/\sand\s/, ' && ')
+      conds = []
+      matched = match_line(line, :conditions)
+
+      matched.gsub!(/\sis at least\s/, ' >= ')
+      matched.gsub!(/\sis\s/, ' == ')
+      matched.gsub!(/\sand\s/, ' && ')
+
+      matched.split(/\s&&\s/).each_with_index do |c, i|
+        match = c.match(/([\w_]+)\s([<>=]+)\s(.+)/)
+        attr = match[1]
+        operator = match[2]
+        expected_value = match[3].gsub(/'/, '')
+        digit = expected_value.match(/^\d+$/)
+        expected_value = expected_value.to_f unless digit.nil?
+
+        conds.push({
+          'group_operator' => i == 0 ? '' : '&&',
+          'attr' => attr,
+          'operator' => operator,
+          'expected_value' => expected_value,
+        })
+      end
+
       conds
     end
   end
