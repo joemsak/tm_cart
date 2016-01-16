@@ -38,9 +38,9 @@ module TextMasterShop
         rule_def = match_line(line, :rule_def)
 
         parsed[rule_name] = {}
-        parsed[rule_name]['unit_price'] = unit_price(rule_def)
-        parsed[rule_name]['every'] = every(rule_def)
-        parsed[rule_name]['conditions'] = conditions(rule_def)
+        parsed[rule_name]["unit_price"] = unit_price(rule_def)
+        parsed[rule_name]["every"] = every(rule_def)
+        parsed[rule_name]["conditions"] = conditions(rule_def)
       end
     end
 
@@ -64,23 +64,23 @@ module TextMasterShop
       conds = []
       matched = match_line(line, :conditions)
 
-      matched.gsub!(PATTERNS[:is_at_least], ' >= ')
-      matched.gsub!(PATTERNS[:is], ' == ')
-      matched.gsub!(PATTERNS[:and], ' && ')
+      matched.gsub!(PATTERNS[:is_at_least], " >= ")
+      matched.gsub!(PATTERNS[:is], " == ")
+      matched.gsub!(PATTERNS[:and], " && ")
 
       matched.split(PATTERNS[:and_op]).each_with_index do |c, i|
         match = c.match(PATTERNS[:condition])
         attr = match[1]
         operator = match[2]
-        expected_value = match[3].gsub(PATTERNS[:extra_quotes], '')
+        expected_value = match[3].gsub(PATTERNS[:extra_quotes], "")
         digit = expected_value.match(PATTERNS[:digit])
         expected_value = expected_value.to_f unless digit.nil?
 
         conds.push({
-          'group_operator' => i == 0 ? '' : '&&',
-          'attr' => attr,
-          'operator' => operator,
-          'expected_value' => expected_value,
+          "chain_operator" => i == 0 ? "" : " && ",
+          "attr" => attr,
+          "operator" => operator,
+          "expected_value" => expected_value,
         })
       end
 

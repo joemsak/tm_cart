@@ -34,7 +34,7 @@ RSpec.describe TextMasterShop::PricingRules do
     expect(conditions[0]["operator"]).to eq("==")
     expect(conditions[0]["expected_value"]).to eq("AP1")
 
-    expect(conditions[1]["group_operator"]).to eq("&&")
+    expect(conditions[1]["chain_operator"]).to eq(" && ")
     expect(conditions[1]["attr"]).to eq("quantity")
     expect(conditions[1]["operator"]).to eq(">=")
     expect(conditions[1]["expected_value"]).to eq(3)
