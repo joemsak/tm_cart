@@ -11,8 +11,8 @@ module TextMasterShop
       and: /\sand\s/,
       and_op: /\s&&\s/,
       condition: /([\w_]+)\s([<>=]+)\s(.+)/,
-      digit: /^\d+$/,
-      extra_quotes: /'/,
+      digit: /^[\d\.]+$/,
+      extra_quotes: /['\\"]/,
     }
 
     private
