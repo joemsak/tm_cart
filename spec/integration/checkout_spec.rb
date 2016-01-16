@@ -42,4 +42,18 @@ RSpec.describe "Using the checkout system" do
     expect(cart.quantity(fruit_tea)).to eq(0)
     expect(cart.total).to eq(0.0)
   end
+
+  it "applies pricing rules" do
+    fruit_tea = TextMasterShop::Product.new(id: "FR1",
+                                            name: "Fruit tea",
+                                            price_in_pennies: 311)
+    script = File.open('./spec/support/integration_pricing_rules')
+    rules = TextMasterShop::PricingRules.new(script)
+    cart = TextMasterShop::Cart.new(rules)
+
+    cart.add(fruit_tea, quantity: 5)
+
+    expect(cart.quantity(fruit_tea)).to eq(5)
+    expect(cart.total).to eq(9.33)
+  end
 end
