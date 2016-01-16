@@ -21,10 +21,10 @@ module TextMasterShop
     public
     attr_reader :parsed
 
-    def initialize(rules_file)
+    def initialize(rules_file = nil)
       @file = rules_file
       @parsed = {}
-      parse_rules
+      parse_rules unless file.nil?
     end
 
     def [](key)

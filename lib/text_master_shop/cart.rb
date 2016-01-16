@@ -4,7 +4,7 @@ module TextMasterShop
     attr_reader :items
 
     public
-    def initialize
+    def initialize(pricing_rules = PricingRules.new)
       @items = []
     end
 
@@ -39,7 +39,7 @@ module TextMasterShop
 
     def quantity(item)
       found = find(type: item.class.name, id: item.id)
-      found[:quantity]
+      (found && found[:quantity]) || 0
     end
 
     private
