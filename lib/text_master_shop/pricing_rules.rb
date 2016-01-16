@@ -6,6 +6,13 @@ module TextMasterShop
       unit_price: /unit price\s([\d\.]+)/,
       every: /for every\s(\d+)/,
       conditions: /if\s(.+)/,
+      is_at_least: /\sis at least\s/,
+      is: /\sis\s/,
+      and: /\sand\s/,
+      and_op: /\s&&\s/,
+      condition: /([\w_]+)\s([<>=]+)\s(.+)/,
+      digit: /^\d+$/,
+      extra_quotes: /'/,
     }
 
     private
@@ -51,20 +58,22 @@ module TextMasterShop
       (match_line(line, :every) || 1).to_i
     end
 
+    # The team expects this method to improve
+    # as more use cases are introduced by the client
     def conditions(line)
       conds = []
       matched = match_line(line, :conditions)
 
-      matched.gsub!(/\sis at least\s/, ' >= ')
-      matched.gsub!(/\sis\s/, ' == ')
-      matched.gsub!(/\sand\s/, ' && ')
+      matched.gsub!(PATTERNS[:is_at_least], ' >= ')
+      matched.gsub!(PATTERNS[:is], ' == ')
+      matched.gsub!(PATTERNS[:and], ' && ')
 
-      matched.split(/\s&&\s/).each_with_index do |c, i|
-        match = c.match(/([\w_]+)\s([<>=]+)\s(.+)/)
+      matched.split(PATTERNS[:and_op]).each_with_index do |c, i|
+        match = c.match(PATTERNS[:condition])
         attr = match[1]
         operator = match[2]
-        expected_value = match[3].gsub(/'/, '')
-        digit = expected_value.match(/^\d+$/)
+        expected_value = match[3].gsub(PATTERNS[:extra_quotes], '')
+        digit = expected_value.match(PATTERNS[:digit])
         expected_value = expected_value.to_f unless digit.nil?
 
         conds.push({
