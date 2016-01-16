@@ -10,7 +10,8 @@ module TextMasterShop
 
     def total
       prices = items.collect { |i| i[:unit_price] * i[:quantity] }
-      prices.inject(:+) || 0
+      sum_in_pennies = prices.inject(:+) || 0
+      sum_in_pennies / 100.0
     end
 
     def add(item, options = {})
