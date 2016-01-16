@@ -1,6 +1,14 @@
 module TextMasterShop
   class PricingRules
     private
+    PATTERNS = {
+      rule_name: /"(\w+)"/,
+      rule_def: /"\w+"\s(.+)/,
+      unit_price: /unit price\s([\d\.]+)/,
+      every: /for every\s(\d+)/,
+      conditions: /if\s(.+)/,
+    }
+
     attr_reader :file
 
     public
@@ -19,26 +27,36 @@ module TextMasterShop
     private
     def read_rules
       file.readlines.each do |line|
-        rule_name = match_line(line, /"(\w+)"/)
-        rule_def = match_line(line, /"\w+"\s(.+)/)
-        unit_price = match_line(rule_def, /unit price\s([\d\.]+)/).to_f
-        every = (match_line(rule_def, /for every\s(\d+)/) || 1).to_i
-        conditions = match_line(rule_def, /if\s(.+)/)
-        conditions.gsub!(/\sis at least\s/, ' >= ')
-        conditions.gsub!(/\sis\s/, ' == ')
-        conditions.gsub!(/\sand\s/, ' && ')
+        rule_name = match_line(line, :rule_name)
+        rule_def = match_line(line, :rule_def)
 
         rules[rule_name] = {}
-        rules[rule_name]['unit_price'] = unit_price
-        rules[rule_name]['every'] = every
-        rules[rule_name]['conditions'] = conditions
+        rules[rule_name]['unit_price'] = unit_price(rule_def)
+        rules[rule_name]['every'] = every(rule_def)
+        rules[rule_name]['conditions'] = conditions(rule_def)
       end
     end
 
-    def match_line(line, pattern)
+    def match_line(line, pattern_key)
       line = line.chomp
-      match = line.match(pattern)
+      match = line.match(PATTERNS[pattern_key])
       match && match[1]
+    end
+
+    def unit_price(line)
+      match_line(line, :unit_price).to_f
+    end
+
+    def every(line)
+      (match_line(line, :every) || 1).to_i
+    end
+
+    def conditions(line)
+      conds = match_line(line, :conditions)
+      conds.gsub!(/\sis at least\s/, ' >= ')
+      conds.gsub!(/\sis\s/, ' == ')
+      conds.gsub!(/\sand\s/, ' && ')
+      conds
     end
   end
 end

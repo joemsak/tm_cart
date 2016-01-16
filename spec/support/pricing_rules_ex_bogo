@@ -1,1 +1,0 @@
-rule "bogo" set unit price 0 for every 2 if id is 'FR1'
