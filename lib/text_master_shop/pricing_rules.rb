@@ -42,9 +42,12 @@ module TextMasterShop
 
           item[:discount_applied] = DISCOUNT_CODES[key]
           item[:discount] = amount_to_apply
-
-          items[i] = item
+        else
+          item.delete(:discount_applied)
+          item.delete(:discount)
         end
+
+        items[i] = item
       end
 
       items

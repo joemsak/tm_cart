@@ -35,11 +35,13 @@ module TextMasterShop
     def increment(item)
       found = find(type: item.class.name, id: item.id)
       found[:quantity] += 1
+      apply_any_discounts
     end
 
     def decrement(item)
       found = find(type: item.class.name, id: item.id)
       found[:quantity] -= 1
+      apply_any_discounts
     end
 
     def quantity(item)
