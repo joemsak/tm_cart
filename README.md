@@ -20,4 +20,14 @@ Relevant links:
 
 [PricingRules](https://github.com/joemsak/tm_cart/blob/master/lib/text_master_shop/pricing_rules.rb)
 
-Originally, I planned to make `PricingRules` allow for a sort of DSL script the client could type and update on the site themselves, however this lead to a mess and a headache that just wasn't worth it in the end. I feel confident that my design of `PricingRules` is reasonably adaptable to future changes, though I am open to suggestions and feedback from my team.
+Originally, I planned to make `PricingRules` allow for a sort of DSL script the client could create and update on the site themselves, however this lead to a mess and a headache that just wasn't worth it in the end. I feel confident that my design of `PricingRules` is reasonably adaptable to future changes, though I am open to suggestions and feedback from my team.
+
+Example idea for DSL script that got canned in this sprint:
+
+```
+rule "bogo" set unit price 0 for every 2 if id is FR1
+rule "bulk" set unit price 4.5 if id is AP1 and quantity is at least 3
+```
+
+If you're willing to indulge my failed attempt, the code for this idea was last left in this condition:
+[PricingRules with DSL script enabled](https://github.com/joemsak/tm_cart/blob/ee2584f5f9c93c70bf1b9d166dc52eeedc60d958/lib/text_master_shop/pricing_rules.rb)
