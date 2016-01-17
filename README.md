@@ -32,4 +32,5 @@ rule "bulk" set unit price 4.5 if id is AP1 and quantity is at least 3
 ```
 
 If you're willing to indulge my failed attempt, the code for this idea was last left in this condition:
+
 [PricingRules with DSL script enabled](https://github.com/joemsak/tm_cart/blob/ee2584f5f9c93c70bf1b9d166dc52eeedc60d958/lib/text_master_shop/pricing_rules.rb)
