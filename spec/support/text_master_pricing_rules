@@ -1,2 +1,0 @@
-rule "bogoFruitTea" unit price 0 for every 2 if id is FR1
-rule "bulkApple" unit price 4.5 if id is AP1 and quantity is at least 3
