@@ -19,7 +19,7 @@ module TextMasterShop
     end
 
     def add(item, options = {})
-      if found = find(type: item.class.name, id: item.id)
+      if found = find(item)
         update_existing(found, options)
       else
         add_new(item, options)
@@ -41,7 +41,7 @@ module TextMasterShop
     end
 
     def quantity(item)
-      found = find(type: item.class.name, id: item.id)
+      found = find(item)
       (found && found[:quantity]) || 0
     end
 
@@ -58,7 +58,7 @@ module TextMasterShop
     end
 
     def update_quantity(item, amount)
-      found = find(type: item.class.name, id: item.id)
+      found = find(item)
       update_existing(found, quantity: amount)
       apply_any_discounts
     end
@@ -70,8 +70,8 @@ module TextMasterShop
       items[i] = item
     end
 
-    def find(type:, id:)
-      items.select { |i| i[:type] == type && i[:id] == id }.first
+    def find(item)
+      items.select { |i| i[:type] == item.class.name && i[:id] == item.id }.first
     end
 
     def discounts
