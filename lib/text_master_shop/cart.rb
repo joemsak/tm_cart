@@ -24,8 +24,6 @@ module TextMasterShop
       else
         add_new(item, options)
       end
-
-      apply_any_discounts
     end
 
     def remove(item)
@@ -55,12 +53,12 @@ module TextMasterShop
         quantity: qty,
         unit_price: item.price_in_pennies / 100.0,
       })
+      apply_any_discounts
     end
 
     def update_quantity(item, amount)
       found = find(item)
       update_existing(found, quantity: amount)
-      apply_any_discounts
     end
 
     def update_existing(item, options)
@@ -68,6 +66,7 @@ module TextMasterShop
       i = items.index(item)
       item[:quantity] += qty
       items[i] = item
+      apply_any_discounts
     end
 
     def find(item)
