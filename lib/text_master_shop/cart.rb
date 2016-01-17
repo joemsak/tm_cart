@@ -1,11 +1,12 @@
 module TextMasterShop
   class Cart
     private
-    attr_reader :items
+    attr_reader :items, :pricing_rules
 
     public
-    def initialize
+    def initialize(pricing_rules = PricingRules.new)
       @items = []
+      @pricing_rules = pricing_rules
     end
 
     def subtotal
