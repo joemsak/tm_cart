@@ -1,41 +1,23 @@
 # TextMasterShop
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/text_master_shop`. To experiment with that code, run `bin/console` for an interactive prompt.
+Hello TextMaster!
 
-TODO: Delete this and the text above, and describe your gem
+I hope you will enjoy the code herein for my application audition.
 
-## Installation
+I'd like to add just a couple of notes about my choices in this code base:
 
-Add this line to your application's Gemfile:
+* You may notice there are no direct unit specs for `Product` - I feel confident this class is simple enough for now and covered adequately by its use in integration specs
 
-```ruby
-gem 'text_master_shop'
-```
+* You may notice I leave trailing `,` at the end of arrays and hashes. - I have recently learned from `thoughtbot` developers that this is a good practice to reduce diff noise
 
-And then execute:
+* You may notice I avoid `let` even when I have the same assignments in each test. - Again, I have picked this convention up from `thoughtbot` because being able to see all the setup in the test is more valuable than saving a couple lines of simple code. Often, `let` is abused and hides very messy and complex setup. If your setup variables aren't simple and easy to type, perhaps there is a problem in the system design.
 
-    $ bundle
+* Finally, you will notice I use `let` in the integration spec with your test data. This is to make the test faster and easier to read for the purposes of my application to the position available within your company.
 
-Or install it yourself as:
+Relevant links:
 
-    $ gem install text_master_shop
+[Integration test based on TextMaster test data](https://github.com/joemsak/tm_cart/blob/master/spec/integration/text_master_data_spec.rb)
 
-## Usage
+[PricingRules](https://github.com/joemsak/tm_cart/blob/master/lib/text_master_shop/pricing_rules.rb)
 
-TODO: Write usage instructions here
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/text_master_shop. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](contributor-covenant.org) code of conduct.
-
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
+Originally, I planned to make `PricingRules` allow for a sort of DSL script the client could type and update on the site themselves, however this lead to a mess and a headache that just wasn't worth it in the end. I feel confident that my design of `PricingRules` is reasonably adaptable to future changes, though I am open to suggestions and feedback from my team.
