@@ -1,56 +1,65 @@
 module TextMasterShop
   class PricingRules
-    PRODUCT_CODES = {
-      fruit_tea: 'FR1',
-      apple: 'AP1',
-    }
+    RULES = {
+      bogoFruitTea: {
+        product_code: 'FR1',
+        discount_percentage: 100,
+        for_every: 2,
+        min_qty: 2,
+      },
 
-    DISCOUNT_CODES = {
-      fruit_tea: 'bogoFruitTea',
-      apple: 'bulkApple',
-    }
-
-    DISCOUNT_AMOUNTS = {
-      fruit_tea: 3.11,
-      apple: 0.5,
-    }
-
-    DISCOUNT_EVERY = {
-      fruit_tea: 2,
-      apple: 1,
-    }
-
-    DISCOUNT_AFTER = {
-      fruit_tea: 1,
-      apple: 2,
+      bulkApple: {
+        product_code: 'AP1',
+        discount_percentage: 10,
+        for_every: 1,
+        min_qty: 3,
+      },
     }
 
     def apply(items)
-      items = apply_discounts(items, :fruit_tea)
-      items = apply_discounts(items, :apple)
+      items = apply_discounts(items, :bogoFruitTea)
+      items = apply_discounts(items, :bulkApple)
       items
     end
 
     private
     def apply_discounts(items, key)
-      if item = items.select { |item| item[:id] == PRODUCT_CODES[key] }.first
+      product_code = RULES[key][:product_code]
+      min_qty = RULES[key][:min_qty]
+
+      if item = items.select { |item| item[:id] == product_code }.first
         i = items.index(item)
 
-        if item[:quantity] > DISCOUNT_AFTER[key]
-          qty_to_apply = item[:quantity] / DISCOUNT_EVERY[key]
-          amount_to_apply = qty_to_apply * DISCOUNT_AMOUNTS[key]
+        updated_item = if item[:quantity] >= min_qty
+                         apply_discount(item, key)
+                       else
+                         clear_discount(item)
+                       end
 
-          item[:discount_applied] = DISCOUNT_CODES[key]
-          item[:discount] = amount_to_apply
-        else
-          item.delete(:discount_applied)
-          item.delete(:discount)
-        end
-
-        items[i] = item
+        items[i] = updated_item
       end
 
       items
+    end
+
+    def apply_discount(item, key)
+      discount_percentage = RULES[key][:discount_percentage]
+      for_every = RULES[key][:for_every]
+
+      qty_to_apply = item[:quantity] / for_every
+      discounted_price = item[:unit_price] * (discount_percentage / 100.0)
+      amount_to_apply = qty_to_apply * discounted_price
+
+      item[:discount_applied] = key
+      item[:discount] = amount_to_apply
+
+      item
+    end
+
+    def clear_discount(item)
+      item.delete(:discount_applied)
+      item.delete(:discount)
+      item
     end
   end
 end

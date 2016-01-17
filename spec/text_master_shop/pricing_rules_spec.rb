@@ -14,7 +14,7 @@ RSpec.describe TextMasterShop::PricingRules do
           id: 'FR1',
           unit_price: 3.11,
           quantity: 3,
-          discount_applied: 'bogoFruitTea',
+          discount_applied: :bogoFruitTea,
           discount: 3.11,
         },
         apple,
@@ -37,7 +37,7 @@ RSpec.describe TextMasterShop::PricingRules do
           id: 'AP1',
           unit_price: 5.00,
           quantity: 3,
-          discount_applied: 'bulkApple',
+          discount_applied: :bulkApple,
           discount: 1.5,
         },
       ])
