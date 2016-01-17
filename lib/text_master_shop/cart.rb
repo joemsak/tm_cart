@@ -33,15 +33,11 @@ module TextMasterShop
     end
 
     def increment(item)
-      found = find(type: item.class.name, id: item.id)
-      found[:quantity] += 1
-      apply_any_discounts
+      update_quantity(item, 1)
     end
 
     def decrement(item)
-      found = find(type: item.class.name, id: item.id)
-      found[:quantity] -= 1
-      apply_any_discounts
+      update_quantity(item, -1)
     end
 
     def quantity(item)
@@ -59,6 +55,12 @@ module TextMasterShop
         quantity: qty,
         unit_price: item.price_in_pennies / 100.0,
       })
+    end
+
+    def update_quantity(item, amount)
+      found = find(type: item.class.name, id: item.id)
+      update_existing(found, quantity: amount)
+      apply_any_discounts
     end
 
     def update_existing(item, options)
