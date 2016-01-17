@@ -1,12 +1,11 @@
 module TextMasterShop
   class Cart
     private
-    attr_reader :items, :pricing_rules
+    attr_reader :items
 
     public
-    def initialize(pricing_rules = PricingRules.new)
+    def initialize
       @items = []
-      @pricing_rules = pricing_rules
     end
 
     def subtotal
@@ -15,16 +14,24 @@ module TextMasterShop
     end
 
     def total
-      (((subtotal * sales_tax) + shipping + discounts) * 100).round / 100.0
+      (subtotal * 100).round / 100.0
     end
 
     def add(item, options = {})
-      items.push({
-        id: item.id,
-        type: item.class.name,
-        quantity: options[:quantity] || 1,
-        unit_price: item.price_in_pennies / 100.0,
-      })
+      qty = options[:quantity] || 1
+
+      if found = find(type: item.class.name, id: item.id)
+        i = items.index(found)
+        found[:quantity] += qty
+        items[i] = found
+      else
+        items.push({
+          id: item.id,
+          type: item.class.name,
+          quantity: qty,
+          unit_price: item.price_in_pennies / 100.0,
+        })
+      end
     end
 
     def remove(item)
@@ -49,37 +56,6 @@ module TextMasterShop
     private
     def find(type:, id:)
       items.select { |i| i[:type] == type && i[:id] == id }.first
-    end
-
-    def sales_tax
-      1.0 # This will be important in later sprints
-    end
-
-    def shipping
-      0.0 # This will be important in later sprints
-    end
-
-    def discounts
-      # discounts only work for TextMasterShop::Product in this sprint
-      discount = 0
-
-      pricing_rules.parsed.each do |_, rule|
-        rule["conditions"].each do |cond|
-          attr = cond["attr"].to_sym
-          op = cond["operator"]
-          value = cond["expected_value"]
-
-          selected = items.select { |item|
-            item[:type] == "TextMasterShop::Product" &&
-              item[attr].send(op, value)
-          }.first
-
-          qty_to_apply = selected[:quantity] / rule["every"]
-          discount += (selected[:unit_price] * qty_to_apply)
-        end
-      end
-
-      -discount
     end
   end
 end
