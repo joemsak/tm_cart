@@ -47,8 +47,7 @@ RSpec.describe "Using the checkout system" do
     fruit_tea = TextMasterShop::Product.new(id: "FR1",
                                             name: "Fruit tea",
                                             price_in_pennies: 311)
-    rules = TextMasterShop::PricingRules.new
-    cart = TextMasterShop::Cart.new(rules)
+    cart = TextMasterShop::Cart.new
 
     cart.add(fruit_tea, quantity: 5)
 

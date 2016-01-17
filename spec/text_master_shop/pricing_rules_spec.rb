@@ -5,10 +5,9 @@ RSpec.describe TextMasterShop::PricingRules do
     it "will set discount information on every other fruit tea" do
       fruit_tea = { id: 'FR1', unit_price: 3.11, quantity: 3, }
       apple = { id: 'AP1', unit_price: 5.00, quantity: 2, }
-      cart = double(:cart, items: [fruit_tea, apple,],)
 
       rules = described_class.new
-      items_with_discounts = rules.apply(cart)
+      items_with_discounts = rules.apply([fruit_tea, apple,])
 
       expect(items_with_discounts).to eq([
         {
@@ -30,7 +29,7 @@ RSpec.describe TextMasterShop::PricingRules do
       cart = double(:cart, items: [fruit_tea, apple,],)
 
       rules = described_class.new
-      items_with_discounts = rules.apply(cart)
+      items_with_discounts = rules.apply([fruit_tea, apple,])
 
       expect(items_with_discounts).to eq([
         fruit_tea,

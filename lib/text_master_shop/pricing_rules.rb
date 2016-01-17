@@ -25,8 +25,7 @@ module TextMasterShop
       apple: 2,
     }
 
-    def apply(cart)
-      items = cart.items
+    def apply(items)
       items = apply_discounts(items, :fruit_tea)
       items = apply_discounts(items, :apple)
       items

@@ -15,7 +15,7 @@ module TextMasterShop
     end
 
     def total
-      (subtotal * 100).round / 100.0
+      ((subtotal - discounts) * 100).round / 100.0
     end
 
     def add(item, options = {})
@@ -24,6 +24,8 @@ module TextMasterShop
       else
         add_new(item, options)
       end
+
+      apply_any_discounts
     end
 
     def remove(item)
@@ -60,12 +62,20 @@ module TextMasterShop
     def update_existing(item, options)
       qty = options[:quantity] || 1
       i = items.index(item)
-      found[:quantity] += qty
+      item[:quantity] += qty
       items[i] = item
     end
 
     def find(type:, id:)
       items.select { |i| i[:type] == type && i[:id] == id }.first
+    end
+
+    def discounts
+      items.collect { |i| i[:discount] }.compact.inject(:+) || 0
+    end
+
+    def apply_any_discounts
+      @items = pricing_rules.apply(items)
     end
   end
 end
