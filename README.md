@@ -25,6 +25,8 @@ Originally, I planned to make `PricingRules` allow for a sort of DSL script the 
 Example idea for DSL script that got canned in this sprint:
 
 ```
+# ./lib/pricing_rules_script
+
 rule "bogo" set unit price 0 for every 2 if id is FR1
 rule "bulk" set unit price 4.5 if id is AP1 and quantity is at least 3
 ```
