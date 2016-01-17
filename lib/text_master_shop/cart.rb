@@ -18,19 +18,10 @@ module TextMasterShop
     end
 
     def add(item, options = {})
-      qty = options[:quantity] || 1
-
       if found = find(type: item.class.name, id: item.id)
-        i = items.index(found)
-        found[:quantity] += qty
-        items[i] = found
+        update_existing(found, options)
       else
-        items.push({
-          id: item.id,
-          type: item.class.name,
-          quantity: qty,
-          unit_price: item.price_in_pennies / 100.0,
-        })
+        add_new(item, options)
       end
     end
 
@@ -54,6 +45,24 @@ module TextMasterShop
     end
 
     private
+    def add_new(item, options)
+      qty = options[:quantity] || 1
+
+      items.push({
+        id: item.id,
+        type: item.class.name,
+        quantity: qty,
+        unit_price: item.price_in_pennies / 100.0,
+      })
+    end
+
+    def update_existing(item, options)
+      qty = options[:quantity] || 1
+      i = items.index(item)
+      found[:quantity] += qty
+      items[i] = item
+    end
+
     def find(type:, id:)
       items.select { |i| i[:type] == type && i[:id] == id }.first
     end
