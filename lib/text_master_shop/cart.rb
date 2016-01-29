@@ -10,7 +10,7 @@ module TextMasterShop
     end
 
     def subtotal
-      prices = items.collect { |i| i[:unit_price] * i[:quantity] }
+      prices = items.collect { |i| i.unit_price * i.quantity }
       prices.inject(:+) || 0.0
     end
 
@@ -27,7 +27,7 @@ module TextMasterShop
     end
 
     def remove(item)
-      items.delete_if { |i| i[:id] == item.id }
+      items.delete_if { |i| i.id == item.id }
     end
 
     def increment(item)
@@ -40,19 +40,14 @@ module TextMasterShop
 
     def quantity(item)
       found = find(item)
-      (found && found[:quantity]) || 0
+      (found && found.quantity) || 0
     end
 
     private
     def add_new(item, options)
-      qty = options[:quantity] || 1
+      cart_item = CartItem.new(item, options)
 
-      items.push({
-        id: item.id,
-        type: item.class.name,
-        quantity: qty,
-        unit_price: item.price_in_pennies / 100.0,
-      })
+      items.push(cart_item)
       apply_any_discounts
     end
 
@@ -63,18 +58,20 @@ module TextMasterShop
 
     def update_existing(item, options)
       qty = options[:quantity] || 1
+      item.update_quantity(qty)
+
       i = items.index(item)
-      item[:quantity] += qty
       items[i] = item
+
       apply_any_discounts
     end
 
     def find(item)
-      items.select { |i| i[:type] == item.class.name && i[:id] == item.id }.first
+      items.select { |i| i.type == item.class.name && i.id == item.id }.first
     end
 
     def discounts
-      items.collect { |i| i[:discount] }.compact.inject(:+) || 0
+      items.collect { |i| i.discount }.compact.inject(:+) || 0
     end
 
     def apply_any_discounts
