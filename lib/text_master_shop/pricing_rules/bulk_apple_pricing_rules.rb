@@ -1,5 +1,5 @@
 module TextMasterShop
-  class BulkApplePricingRules
+  class BulkApplePricingRules < PricingRules
     def self.product_code
       'AP1'
     end

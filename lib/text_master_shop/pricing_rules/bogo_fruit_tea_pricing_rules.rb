@@ -1,5 +1,5 @@
 module TextMasterShop
-  class BogoFruitTeaPricingRules
+  class BogoFruitTeaPricingRules < PricingRules
     def self.product_code
       'FR1'
     end
