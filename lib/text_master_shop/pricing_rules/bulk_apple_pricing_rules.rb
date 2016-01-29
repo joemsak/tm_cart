@@ -1,5 +1,9 @@
 module TextMasterShop
-  class BulkApplePricingRules < PricingRules
+  class BulkApplePricingRules
+    def self.discount_applies?(item)
+      item && item.id == product_code && item.quantity >= min_qty
+    end
+
     def self.product_code
       'AP1'
     end

@@ -1,21 +1,12 @@
+require "text_master_shop/pricing_rules/bogo_fruit_tea_pricing_rules"
+require "text_master_shop/pricing_rules/bulk_apple_pricing_rules"
+
 module TextMasterShop
   class PricingRules
-    @@discounters = []
-
-    def self.inherited(base)
-      @@discounters << base
-    end
-
     def apply(items)
-      @@discounters.each do |discounter|
-        apply_discounts(items, discounter)
-      end
-
+      apply_discounts(items, BogoFruitTeaPricingRules)
+      apply_discounts(items, BulkApplePricingRules)
       items
-    end
-
-    def self.discount_applies?(item)
-      item && item.id == product_code && item.quantity >= min_qty
     end
 
     private

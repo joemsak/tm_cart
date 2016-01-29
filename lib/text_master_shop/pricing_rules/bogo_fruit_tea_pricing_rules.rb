@@ -1,5 +1,9 @@
 module TextMasterShop
-  class BogoFruitTeaPricingRules < PricingRules
+  class BogoFruitTeaPricingRules
+    def self.discount_applies?(item)
+      item && item.id == product_code && item.quantity >= min_qty
+    end
+
     def self.product_code
       'FR1'
     end
