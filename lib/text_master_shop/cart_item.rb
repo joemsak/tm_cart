@@ -13,13 +13,11 @@ module TextMasterShop
       @discount ||= 0
     end
 
-    def set_discount(name, amount)
-      @discount_name = name
+    def set_discount(amount)
       @discount = amount
     end
 
     def clear_discount
-      @discount_name = nil
       @discount = 0
     end
 

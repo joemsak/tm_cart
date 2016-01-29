@@ -13,7 +13,7 @@ RSpec.describe TextMasterShop::PricingRules do
       rules = described_class.new
 
       expect(apple).to receive(:clear_discount)
-      expect(fruit_tea).to receive(:set_discount).with(:bogoFruitTea, 3.11)
+      expect(fruit_tea).to receive(:set_discount).with(3.11)
 
       rules.apply([fruit_tea, apple,])
     end
@@ -31,7 +31,7 @@ RSpec.describe TextMasterShop::PricingRules do
       rules = described_class.new
 
       expect(fruit_tea).to receive(:clear_discount)
-      expect(apple).to receive(:set_discount).with(:bulkApple, 1.5)
+      expect(apple).to receive(:set_discount).with(1.5)
 
       rules.apply([fruit_tea, apple,])
     end
